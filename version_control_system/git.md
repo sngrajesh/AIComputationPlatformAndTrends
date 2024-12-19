@@ -1,4 +1,4 @@
-## Git 
+## Git Notes
 
 ## Table of Contents
 1. [Initial Setup](#initial-setup)
