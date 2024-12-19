@@ -1,4 +1,4 @@
-### Git oann
+### Git 
 
 #### Table of Contents
 1. [Initial Setup](#initial-setup)
