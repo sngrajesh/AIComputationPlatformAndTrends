@@ -15,6 +15,7 @@
 6. [Docker Lifecycle Chart](#docker-lifecycle-chart)
 7. [Best Practices](#best-practices)
 8. [Troubleshooting](#troubleshooting)
+9. [Workflow](#workflow)
 
 ---
 
