@@ -36,6 +36,8 @@ Docker is a platform for developing, shipping, and running applications inside l
 
 ### Docker Commands Overview ⚡
 
+I'll add more commonly used Docker commands to your notes while maintaining the same structure and style:
+
 #### Images 🖼️
 - List images:  
   ```bash
@@ -48,6 +50,22 @@ Docker is a platform for developing, shipping, and running applications inside l
 - Remove an image:  
   ```bash
   docker rmi <image-id>
+  ```
+- Remove all unused images:
+  ```bash
+  docker image prune -a
+  ```
+- Build image with tag:
+  ```bash
+  docker build -t <image-name>:<tag> .
+  ```
+- Save image to tar file:
+  ```bash
+  docker save -o <output-file>.tar <image-name>
+  ```
+- Load image from tar file:
+  ```bash
+  docker load -i <input-file>.tar
   ```
 
 #### Containers 🛳️
@@ -71,6 +89,34 @@ Docker is a platform for developing, shipping, and running applications inside l
   ```bash
   docker rm <container-id>
   ```
+- Execute command in running container:
+  ```bash
+  docker exec -it <container-id> <command>
+  ```
+- View container logs:
+  ```bash
+  docker logs <container-id>
+  ```
+- Follow container logs:
+  ```bash
+  docker logs -f <container-id>
+  ```
+- Copy files from container to host:
+  ```bash
+  docker cp <container-id>:/path/to/file /host/path
+  ```
+- Copy files from host to container:
+  ```bash
+  docker cp /host/path <container-id>:/path/to/file
+  ```
+- Restart container:
+  ```bash
+  docker restart <container-id>
+  ```
+- Remove all stopped containers:
+  ```bash
+  docker container prune
+  ```
 
 #### Volumes 📂
 - Create a volume:  
@@ -85,6 +131,14 @@ Docker is a platform for developing, shipping, and running applications inside l
   ```bash
   docker volume rm <volume-name>
   ```
+- Inspect volume:
+  ```bash
+  docker volume inspect <volume-name>
+  ```
+- Remove all unused volumes:
+  ```bash
+  docker volume prune
+  ```
 
 #### Networks 🌐
 - Create a network:  
@@ -98,6 +152,18 @@ Docker is a platform for developing, shipping, and running applications inside l
 - Connect a container to a network:  
   ```bash
   docker network connect <network-name> <container-id>
+  ```
+- Disconnect container from network:
+  ```bash
+  docker network disconnect <network-name> <container-id>
+  ```
+- Remove network:
+  ```bash
+  docker network rm <network-name>
+  ```
+- Inspect network:
+  ```bash
+  docker network inspect <network-name>
   ```
 
 ---
@@ -127,6 +193,14 @@ Docker is a platform for developing, shipping, and running applications inside l
    ```bash
    docker build -t <image-name> .
    ```
+3. Build with no cache:
+   ```bash
+   docker build --no-cache -t <image-name> .
+   ```
+4. Build with build arguments:
+   ```bash
+   docker build --build-arg VAR=value -t <image-name> .
+   ```
 
 ---
 
@@ -155,7 +229,45 @@ Docker is a platform for developing, shipping, and running applications inside l
   ```bash
   docker-compose down
   ```
+- Build and start services:
+  ```bash
+  docker-compose up -d --build
+  ```
+- View service logs:
+  ```bash
+  docker-compose logs -f
+  ```
+- Scale services:
+  ```bash
+  docker-compose up -d --scale service=3
+  ```
+- List services:
+  ```bash
+  docker-compose ps
+  ```
+- Execute command in service:
+  ```bash
+  docker-compose exec <service-name> <command>
+  ```
 
+### System Management 🔧
+- View Docker system information:
+  ```bash
+  docker system info
+  ```
+- Show disk usage:
+  ```bash
+  docker system df
+  ```
+- Clean up system (remove unused data):
+  ```bash
+  docker system prune
+  ```
+- Clean up everything:
+  ```bash
+  docker system prune -a --volumes
+  ```
+  
 ---
 
 ### Docker Lifecycle Chart 🔄
