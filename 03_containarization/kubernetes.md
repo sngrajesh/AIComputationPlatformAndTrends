@@ -38,59 +38,57 @@ Kubernetes is an open-source container orchestration platform for automating dep
 
 #### Setup and Installation 🚧
 
-**1. Update System**
+**Update System**
 ```bash
-sudo apt update && sudo apt upgrade -y
+sudo apt update -y
+sudo apt install -y curl wget apt-transport-https
 ```
 
-**2. Install Docker**
+**Download the Minikube binary**
 ```bash
-sudo apt install -y docker.io
-sudo systemctl enable docker
-sudo systemctl start docker
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
 ```
 
-**3. Add Kubernetes Repository**
+**Install the downloaded MiniKube**
 ```bash
-sudo apt install -y apt-transport-https ca-certificates curl
-curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
-echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+sudo install minikube-linux-amd64 /usr/local/bin/minikube
+
 ```
 
-**4. Install Kubernetes Tools**
+**Verify Minikube installation.**
 ```bash
-sudo apt update
-sudo apt install -y kubelet kubeadm kubectl
-sudo apt-mark hold kubelet kubeadm kubectl
+minikube version
 ```
 
-**5. Start and Verify Installation**
+**Download Kubectl binary.**
 ```bash
-kubeadm version
-kubectl version --client
+curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
 ```
 
-**6. Initialize Kubernetes (Optional)**
-For a single-node cluster:
+**Converting the downloaded binary to executable.**
 ```bash
-sudo kubeadm init
+chmod  +x  kubectl
 ```
 
-Follow the on-screen instructions to set up your `kubectl` configuration.
-
-**7. Allow Non-Root Access (Optional)**
+**Moving the binary to /usr/local/bin.**
 ```bash
-mkdir -p $HOME/.kube
-sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-sudo chown $(id -u):$(id -g) $HOME/.kube/config
+sudo mv kubectl /usr/local/bin
 ```
 
-**8. Install Network Plugin**
-Example (Calico):
+**Verify Kubectl version.**
 ```bash
-kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
+9.kubectl version -o yaml
+```
+
+**Give user permission to run docker commands (after creating a user).**
+```bash
+usermod   -G docker   $(whoami)
+```
+
+**Logout from ubuntu and login again. This will apply the user group membership. Then start the Minikube.**
+```bash
+minikube start — driver=docker
 ``` 
-
 ---
 
 #### Working with Kubernetes Objects 💚

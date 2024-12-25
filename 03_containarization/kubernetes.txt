@@ -1,0 +1,143 @@
+(base) dai@pgdai:~$ minikube start — driver=docker
+😄  minikube v1.34.0 on Ubuntu 24.04
+✨  Using the docker driver based on existing profile
+👍  Starting "minikube" primary control-plane node in "minikube" cluster
+🚜  Pulling base image v0.0.45 ...
+🏃  Updating the running docker "minikube" container ...
+🐳  Preparing Kubernetes v1.31.0 on Docker 27.2.0 ...
+🔎  Verifying Kubernetes components...
+    ▪ Using image gcr.io/k8s-minikube/storage-provisioner:v5
+🌟  Enabled addons: default-storageclass, storage-provisioner
+🏄  Done! kubectl is now configured to use "minikube" cluster and "default" namespace by default
+(base) dai@pgdai:~$ kubectl get pods
+No resources found in default namespace.
+(base) dai@pgdai:~$ kubectl start
+error: unknown command "start" for "kubectl"
+(base) dai@pgdai:~$ kubectl get nodes
+NAME       STATUS   ROLES           AGE   VERSION
+minikube   Ready    control-plane   79m   v1.31.0
+(base) dai@pgdai:~$ kubectl get nodes -- all-namespaces
+Error from server (NotFound): nodes "all-namespaces" not found
+(base) dai@pgdai:~$ kubectl get nodes -- all namespaces
+Error from server (NotFound): nodes "all" not found
+Error from server (NotFound): nodes "namespaces" not found
+(base) dai@pgdai:~$ kubectl get pods --all-namespaces
+NAMESPACE     NAME                               READY   STATUS    RESTARTS      AGE
+kube-system   coredns-6f6b679f8f-rz4mm           1/1     Running   2 (19m ago)   85m
+kube-system   etcd-minikube                      1/1     Running   2 (19m ago)   85m
+kube-system   kube-apiserver-minikube            1/1     Running   2 (18m ago)   85m
+kube-system   kube-controller-manager-minikube   1/1     Running   2 (19m ago)   85m
+kube-system   kube-proxy-w54rv                   1/1     Running   2 (19m ago)   85m
+kube-system   kube-scheduler-minikube            1/1     Running   2 (19m ago)   85m
+kube-system   storage-provisioner                1/1     Running   4 (18m ago)   85m
+(base) dai@pgdai:~$ kubectl get deployments
+No resources found in default namespace.
+(base) dai@pgdai:~$ kubectl get svc
+NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   88m
+(base) dai@pgdai:~$ kubectl create deployment web1 --image=httpd --port=80
+deployment.apps/web1 created
+(base) dai@pgdai:~$ kubectl get deploy
+NAME   READY   UP-TO-DATE   AVAILABLE   AGE
+web1   0/1     1            0           8s
+(base) dai@pgdai:~$ kubectl get deploy
+NAME   READY   UP-TO-DATE   AVAILABLE   AGE
+web1   1/1     1            1           36s
+(base) dai@pgdai:~$ kubectl get pods
+NAME                    READY   STATUS    RESTARTS   AGE
+web1-7b498979f5-qjf9n   1/1     Running   0          48s
+(base) dai@pgdai:~$ kubectl get pods
+NAME                    READY   STATUS    RESTARTS   AGE
+web1-7b498979f5-qjf9n   1/1     Running   0          5m10s
+(base) dai@pgdai:~$ kubectl describe pod web1-7b498979f5-qjf9n
+Name:             web1-7b498979f5-qjf9n
+Namespace:        default
+Priority:         0
+Service Account:  default
+Node:             minikube/192.168.49.2
+Start Time:       Wed, 25 Dec 2024 13:45:14 +0100
+Labels:           app=web1
+                  pod-template-hash=7b498979f5
+Annotations:      <none>
+Status:           Running
+IP:               10.244.0.5
+IPs:
+  IP:           10.244.0.5
+Controlled By:  ReplicaSet/web1-7b498979f5
+Containers:
+  httpd:
+    Container ID:   docker://e627ad970f0943a710fd2e284a9774b00125f01198fbe51e6d84601534338b21
+    Image:          httpd
+    Image ID:       docker-pullable://httpd@sha256:72f6e24600718dddef131de7cb5b31496b05c5af41e9db8707df371859a350bb
+    Port:           80/TCP
+    Host Port:      0/TCP
+    State:          Running
+      Started:      Wed, 25 Dec 2024 13:45:35 +0100
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-fm5hv (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       True 
+  ContainersReady             True 
+  PodScheduled                True 
+Volumes:
+  kube-api-access-fm5hv:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    ConfigMapOptional:       <nil>
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age    From               Message
+  ----    ------     ----   ----               -------
+  Normal  Scheduled  5m23s  default-scheduler  Successfully assigned default/web1-7b498979f5-qjf9n to minikube
+  Normal  Pulling    5m21s  kubelet            Pulling image "httpd"
+  Normal  Pulled     5m5s   kubelet            Successfully pulled image "httpd" in 16.592s (16.592s including waiting). Image size: 147462574 bytes.
+  Normal  Created    5m2s   kubelet            Created container httpd
+  Normal  Started    5m1s   kubelet            Started container httpd
+(base) dai@pgdai:~$ minicube cache add nginx
+Command 'minicube' not found, did you mean:
+  command 'minitube' from deb minitube (3.9.3-2)
+Try: sudo apt install <deb name>
+(base) dai@pgdai:~$ minikube cache add nginx
+❗  "minikube cache" will be deprecated in upcoming versions, please switch to "minikube image load"
+(base) dai@pgdai:~$ minikube image load nginx
+(base) dai@pgdai:~$ kubectl get deployment
+NAME   READY   UP-TO-DATE   AVAILABLE   AGE
+web1   1/1     1            1           75m
+(base) dai@pgdai:~$ kubectl expose deployment web1
+service/web1 exposed
+(base) dai@pgdai:~$ kubectl get svc
+NAME         TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)   AGE
+kubernetes   ClusterIP   10.96.0.1     <none>        443/TCP   166m
+web1         ClusterIP   10.101.27.6   <none>        80/TCP    10s
+(base) dai@pgdai:~$ kubectl delete svc web1
+service "web1" deleted
+(base) dai@pgdai:~$ kubectl get deployment
+NAME   READY   UP-TO-DATE   AVAILABLE   AGE
+web1   1/1     1            1           82m
+(base) dai@pgdai:~$ kubectl delete deployment web1^C
+(base) dai@pgdai:~$ kubectl expose deployment web1 --type=NodePort
+service/web1 exposed
+(base) dai@pgdai:~$ kubectl get deployment
+NAME   READY   UP-TO-DATE   AVAILABLE   AGE
+web1   1/1     1            1           84m
+(base) dai@pgdai:~$ kubectl get svc
+NAME         TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
+kubernetes   ClusterIP   10.96.0.1        <none>        443/TCP        177m
+web1         NodePort    10.100.220.160   <none>        80:30360/TCP   119s
+(base) dai@pgdai:~$ minikube service web1 --url
+http://192.168.49.2:30360
+(base) dai@pgdai:~$ curl http://192.168.49.2:30360/
+<html><body><h1>It works!</h1></body></html>
+
+
