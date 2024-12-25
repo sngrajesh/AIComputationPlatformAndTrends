@@ -77,7 +77,7 @@ sudo mv kubectl /usr/local/bin
 
 **Verify Kubectl version.**
 ```bash
-9.kubectl version -o yaml
+kubectl version -o yaml
 ```
 
 **Give user permission to run docker commands (after creating a user).**

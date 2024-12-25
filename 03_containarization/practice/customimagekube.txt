@@ -1,0 +1,195 @@
+dai@pgdai:~/Documents/test$ vim index.html
+
+
+
+dai@pgdai:~/Documents/test$ vim dockerfile
+
+
+
+dai@pgdai:~/Documents/test$ echo "FROM httpd" > Dockerfile
+
+
+
+dai@pgdai:~/Documents/test$ echo "COPY index.html /usr/local/apache2/htdocs" >> Dockerfile
+
+
+
+dai@pgdai:~/Documents/test$ docker build -t kubedemo .
+[+] Building 23.7s (7/7) FINISHED                                docker:default
+ => [internal] load build definition from dockerfile                       0.5s
+ => => transferring dockerfile: 92B                                        0.0s
+ => [internal] load metadata for docker.io/library/httpd:latest            3.7s
+ => [internal] load .dockerignore                                          0.4s
+ => => transferring context: 2B                                            0.0s
+ => [internal] load build context                                          0.9s
+ => => transferring context: 70B                                           0.0s
+ => [1/2] FROM docker.io/library/httpd:latest@sha256:72f6e24600718dddef1  10.6s
+ => => resolve docker.io/library/httpd:latest@sha256:72f6e24600718dddef13  0.7s
+ => => sha256:72f6e24600718dddef131de7cb5b31496b05c5af4 10.16kB / 10.16kB  0.0s
+ => => sha256:3b0b614b944c6002c8b75841d107818fcd072b60483 2.10kB / 2.10kB  0.0s
+ => => sha256:4ce47c750a5864da2614d03c1d7eee1d2449033f51d 7.88kB / 7.88kB  0.0s
+ => => sha256:fd674058ff8f8cfa7fb8a20c006fc0128541cbbad 28.23MB / 28.23MB  1.5s
+ => => sha256:8c3081b233c7dd955ca68d62866c9d7f08e514c4c5044b3 145B / 145B  1.0s
+ => => sha256:4f4fb700ef54461cfa02571ae0db9a0dc1e0cdb5577484a6d 32B / 32B  1.6s
+ => => sha256:172b239db5c25a08be9acc9fa106e0e16c2a9f3a445 4.01MB / 4.01MB  1.8s
+ => => extracting sha256:fd674058ff8f8cfa7fb8a20c006fc0128541cbbad7f7f7f2  0.9s
+ => => sha256:bbff13f6be426ca9ee14644224b0422191bc2018f 26.04MB / 26.04MB  3.0s
+ => => sha256:d7382fd3e491b464c1802782fa24d1142fdc7f83721d9f5 293B / 293B  2.3s
+ => => extracting sha256:8c3081b233c7dd955ca68d62866c9d7f08e514c4c5044b35  0.0s
+ => => extracting sha256:4f4fb700ef54461cfa02571ae0db9a0dc1e0cdb5577484a6  0.0s
+ => => extracting sha256:172b239db5c25a08be9acc9fa106e0e16c2a9f3a44527dfd  0.2s
+ => => extracting sha256:bbff13f6be426ca9ee14644224b0422191bc2018f9679080  0.5s
+ => => extracting sha256:d7382fd3e491b464c1802782fa24d1142fdc7f83721d9f54  0.0s
+ => [2/2] COPY index.html /usr/local/apache2/htdocs                        5.1s
+ => exporting to image                                                     1.5s
+ => => exporting layers                                                    0.9s
+ => => writing image sha256:3ad32a08c1b213a406f45413a570c6d0d83b2783434d2  0.1s
+ => => naming to docker.io/library/kubedemo                                0.1s
+
+
+
+dai@pgdai:~/Documents/test$ docker images | grep kubedemo
+kubedemo                      latest    3ad32a08c1b2   35 seconds ago   147MB
+
+
+
+dai@pgdai:~/Documents/test$ minikube cache add kubedemo
+❗  "minikube cache" will be deprecated in upcoming versions, please switch to "minikube image load"
+
+
+
+dai@pgdai:~/Documents/test$ docker tag kubedemo pgdai/kubedemo
+
+
+
+dai@pgdai:~/Documents/test$ docker images | grep kubedemo
+kubedemo                      latest    3ad32a08c1b2   4 minutes ago   147MB
+pgdai/kubedemo                latest    3ad32a08c1b2   4 minutes ago   147MB
+
+
+
+dai@pgdai:~/Documents/test$ docker push pgdai/kubedemo
+Using default tag: latest
+The push refers to repository [docker.io/pgdai/kubedemo]
+2c49089d76c4: Preparing 
+52168ee29b83: Preparing 
+ca565a60a706: Preparing 
+5dceadbf1901: Preparing 
+5f70bf18a086: Preparing 
+fa084c5dde25: Waiting 
+8b296f486960: Waiting 
+denied: requested access to the resource is denied
+
+
+
+dai@pgdai:~/Documents/test$ docker login
+Log in with your Docker ID or email address to push and pull images from Docker Hub. If you don have a Docker ID, head over to https://hub.docker.com/ to create one.
+You can log in with your password or a Personal Access Token (PAT). Using a limited-scope PAT grants better security and is required for organizations using SSO. Learn more at https://docs.docker.com/go/access-tokens/
+
+Username: pgdai
+Password: 
+WARNING! Your password will be stored unencrypted in /home/dai/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+Login Succeeded
+
+
+
+dai@pgdai:~/Documents/test$ docker push pgdai/kubedemo
+Using default tag: latest
+The push refers to repository [docker.io/pgdai/kubedemo]
+2c49089d76c4: Pushed 
+52168ee29b83: Mounted from library/httpd 
+ca565a60a706: Mounted from library/httpd 
+5dceadbf1901: Mounted from library/httpd 
+5f70bf18a086: Mounted from library/httpd 
+fa084c5dde25: Mounted from library/httpd 
+8b296f486960: Mounted from library/httpd 
+latest: digest: sha256:b626fa708b7dc34408becdbd7accafcc881c8bde68bd48ed0bef72ae229b9870 size: 1779
+
+
+
+dai@pgdai:~/Documents/test$ kubectl create deployment dai2 --image=pgdai/kubedemo --port=80 --replicas=2
+deployment.apps/dai2 created
+
+
+
+dai@pgdai:~/Documents/test$ kubectl get deployments
+NAME   READY   UP-TO-DATE   AVAILABLE   AGE
+dai2   2/2     2            2           2m9s
+
+
+
+dai@pgdai:~/Documents/test$ kubectl get pods
+NAME                    READY   STATUS    RESTARTS   AGE
+dai2-8459464f9b-stgzj   1/1     Running   0          2m14s
+dai2-8459464f9b-zq68r   1/1     Running   0          2m14s
+
+
+
+dai@pgdai:~/Documents/test$ kubectl expose deployment dai2 --type=NodePort
+service/dai2 exposed
+
+
+
+dai@pgdai:~/Documents/test$ minikube service dai2 --url
+http://192.168.49.2:30956
+
+
+
+dai@pgdai:~/Documents/test$  kubectl scale deployment dai2 --replicas=6
+deployment.apps/dai2 scaled
+
+
+
+dai@pgdai:~/Documents/test$ kubectl scale deployment dai2 --replicas=1
+deployment.apps/dai2 scaled
+
+
+
+dai@pgdai:~/Documents/test$ kubectl describe deployment dai2
+Name:                   dai2
+Namespace:              default
+CreationTimestamp:      Wed, 25 Dec 2024 16:31:04 +0100
+Labels:                 app=dai2
+Annotations:            deployment.kubernetes.io/revision: 1
+Selector:               app=dai2
+Replicas:               1 desired | 1 updated | 1 total | 1 available | 0 unavailable
+StrategyType:           RollingUpdate
+MinReadySeconds:        0
+RollingUpdateStrategy:  25% max unavailable, 25% max surge
+Pod Template:
+  Labels:  app=dai2
+  Containers:
+   kubedemo:
+    Image:         pgdai/kubedemo
+    Port:          80/TCP
+    Host Port:     0/TCP
+    Environment:   <none>
+    Mounts:        <none>
+  Volumes:         <none>
+  Node-Selectors:  <none>
+  Tolerations:     <none>
+Conditions:
+  Type           Status  Reason
+  ----           ------  ------
+  Progressing    True    NewReplicaSetAvailable
+  Available      True    MinimumReplicasAvailable
+OldReplicaSets:  <none>
+NewReplicaSet:   dai2-8459464f9b (1/1 replicas created)
+Events:
+  Type    Reason             Age    From                   Message
+  ----    ------             ----   ----                   -------
+  Normal  ScalingReplicaSet  12m    deployment-controller  Scaled up replica set dai2-8459464f9b to 2
+  Normal  ScalingReplicaSet  3m52s  deployment-controller  Scaled up replica set dai2-8459464f9b to 6 from 2
+  Normal  ScalingReplicaSet  99s    deployment-controller  Scaled down replica set dai2-8459464f9b to 2 from 6
+  Normal  ScalingReplicaSet  96s    deployment-controller  Scaled down replica set dai2-8459464f9b to 1 from 2
+
+
+
+dai@pgdai:~/Documents/test$ minikube stop
+✋  Stopping node "minikube"  ...
+🛑  Powering off "minikube" via SSH ...
+🛑  1 node stopped.
+
