@@ -150,7 +150,10 @@ kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
 
 ##### Services
 - Expose applications running in pods to the network.
-- Types: ClusterIP (default), NodePort, LoadBalancer.
+- Types: 
+  - **ClusterIP (default)** : Exposes the service on a cluster-internal IP. Can be accessed only from within the cluster.
+  - **NodePort** : A port is assigned to a service which is mapped on all the computers within the cluster. The service can be accessed from outside the cluster using node IP and the node port.
+  - **LoadBalancer** : Exposes the service externally using a cloud provider’s load balancer. NodePort and ClusterIP services, to which the external load balancer will route, should use the same port number.
 - Create a service:
   ```yaml
   apiVersion: v1
