@@ -15,7 +15,7 @@
 9. [Best Practices](#best-practices)
 10. [Troubleshooting](#troubleshooting)
 11. [Flowchart](#flowchart)
-
+12. [Cheatsheet](#cheatsheet)
 ---
 
 #### Overview
@@ -33,6 +33,10 @@ Kubernetes is an open-source container orchestration platform for automating dep
 | **Scheduler**   | Assigns pods to nodes based on resource requirements.                      |
 | **Kubelet**     | Runs on worker nodes, ensuring container health and resource usage.         |
 | **kubectl**     | Command-line tool for interacting with the cluster.                        |
+
+---
+
+![alt text](https://cdn.prod.website-files.com/6527fe8ad7301efb15574cc7/654cd76e1aa6a6340978a925_diagram-01-1-1024x304.png)
 
 ---
 
@@ -271,3 +275,81 @@ minikube start — driver=docker
 
 #### Flowchart 📝
 ![alt text](../images/kubernetees.gif)
+
+---
+
+#### Cheatsheet 📝
+
+
+##### Cluster Management
+```bash
+kubectl cluster-info                    # Display cluster info
+kubectl get nodes                      # List all nodes in cluster
+kubectl config view                    # Show kubeconfig settings
+kubectl config get-contexts            # List all contexts
+kubectl config use-context <name>      # Switch to different context
+```
+
+##### Pod Operations
+```bash
+kubectl get pods                       # List all pods in current namespace
+kubectl get pods -A                    # List pods across all namespaces
+kubectl describe pod <pod-name>        # Show detailed pod info
+kubectl logs <pod-name>                # View pod logs
+kubectl exec -it <pod-name> -- /bin/sh # Access pod shell
+kubectl port-forward <pod-name> 8080:80# Forward local port to pod port
+```
+
+##### Deployment Management
+```bash
+kubectl get deployments                # List all deployments
+kubectl create -f deploy.yaml          # Create deployment from file
+kubectl scale deploy/<name> --replicas=3# Scale deployment replicas
+kubectl rollout status deploy/<name>   # Check deployment rollout status
+kubectl rollout undo deploy/<name>     # Rollback deployment
+```
+
+##### Service Operations
+```bash
+kubectl get services                   # List all services
+kubectl expose deploy/<name> --port=80 # Create service for deployment
+kubectl get endpoints                  # List service endpoints
+```
+
+##### Namespace Operations
+```bash
+kubectl get namespaces                 # List all namespaces
+kubectl create namespace <name>        # Create new namespace
+kubectl config set-context --current --namespace=<name> # Switch namespace
+```
+
+##### Resource Management
+```bash
+kubectl apply -f <file.yaml>           # Create/update resource from file
+kubectl delete -f <file.yaml>          # Delete resource from file
+kubectl get all                        # List all resources in namespace
+kubectl describe <resource> <name>     # Show detailed resource info
+```
+
+##### Troubleshooting
+```bash
+kubectl get events                     # Show cluster events
+kubectl top nodes                      # Show node resource usage
+kubectl top pods                       # Show pod resource usage
+kubectl get componentstatuses          # Check control plane health
+```
+
+##### Configuration
+```bash
+kubectl create configmap <name> --from-file=<path> # Create configmap from file
+kubectl create secret generic <name> --from-literal=key=value # Create secret
+kubectl get configmaps                # List all configmaps
+kubectl get secrets                   # List all secrets
+```
+
+##### Volume Operations
+```bash
+kubectl get pv                         # List persistent volumes
+kubectl get pvc                        # List persistent volume claims
+kubectl get storageclasses            # List storage classes
+```
