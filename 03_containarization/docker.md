@@ -211,19 +211,34 @@ Docker is a platform for developing, shipping, and running applications inside l
 ### Docker Compose 🪩
 - Create a `docker-compose.yml`:
    ```yaml
-   version: '3.8'
-   services:
-     app:
-       build: .
-       ports:
-         - "5000:5000"
-       volumes:
-         - .:/app
-       networks:
-         - app-network
-   networks:
-     app-network:
-       driver: bridge
+    version: '3.8' # Specify Compose file format version
+    services:
+      web:
+        image: nginx:latest
+        ports:
+          - "8080:80" # Map host port 8080 to container port 80
+        volumes:
+          - ./html:/usr/share/nginx/html # Mount a local directory
+        environment:
+          - NGINX_ENV=production # Set environment variables
+        networks:
+          - app_network # Connect to a custom network
+
+      database:
+        image: mysql:latest
+        environment:
+          MYSQL_ROOT_PASSWORD: root@123
+        volumes:
+          - db_data:/var/lib/mysql # Persist database data
+        networks:
+          - app_network # Connect to the same custom network
+
+    volumes:
+      db_data: # Declare a named volume
+
+    networks:
+      app_network: # Declare a custom network
+        driver: bridge
    ```
 - Start services:  
   ```bash
