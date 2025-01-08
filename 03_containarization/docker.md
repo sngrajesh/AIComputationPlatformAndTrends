@@ -1,4 +1,5 @@
 ## Docker 🐳
+
 ---
 
 ### Table of Contents
@@ -11,10 +12,12 @@
    - [Networks](#networks)
 4. [Dockerfile Basics](#dockerfile-basics)
 5. [Docker Compose](#docker-compose)
-6. [Docker Lifecycle Chart](#docker-lifecycle-chart)
-7. [Best Practices](#best-practices)
-8. [Troubleshooting](#troubleshooting)
-9. [Workflow](#workflow)
+6. [System Management](#system-management)
+7. [Advanced Docker Concepts](#advanced-docker-concepts)
+8. [Docker Lifecycle Chart](#docker-lifecycle-chart)
+9. [Best Practices](#best-practices)
+10. [Troubleshooting](#troubleshooting)
+11. [Workflow](#workflow)
 
 ---
 
@@ -34,8 +37,6 @@ Docker is a platform for developing, shipping, and running applications inside l
 ---
 
 ### Docker Commands Overview ⚡
-
-I'll add more commonly used Docker commands to your notes while maintaining the same structure and style:
 
 #### Images 🖼️
 - List images:  
@@ -65,6 +66,10 @@ I'll add more commonly used Docker commands to your notes while maintaining the 
 - Load image from tar file:
   ```bash
   docker load -i <input-file>.tar
+  ```
+- List image layers:
+  ```bash
+  docker history <image-name>
   ```
 
 #### Containers 🛳️
@@ -167,7 +172,7 @@ I'll add more commonly used Docker commands to your notes while maintaining the 
 
 ---
 
-### Dockerfile Basics 📝
+### Dockerfile Basics 🗞️
 1. Create a `Dockerfile`:
    ```dockerfile
    # Use base image
@@ -203,7 +208,7 @@ I'll add more commonly used Docker commands to your notes while maintaining the 
 
 ---
 
-### Docker Compose 🧩
+### Docker Compose 🪩
 - Create a `docker-compose.yml`:
    ```yaml
    version: '3.8'
@@ -249,6 +254,8 @@ I'll add more commonly used Docker commands to your notes while maintaining the 
   docker-compose exec <service-name> <command>
   ```
 
+---
+
 ### System Management 🔧
 - View Docker system information:
   ```bash
@@ -266,7 +273,53 @@ I'll add more commonly used Docker commands to your notes while maintaining the 
   ```bash
   docker system prune -a --volumes
   ```
-  
+
+---
+
+### Advanced Docker Concepts 🌐
+
+#### Multi-Stage Builds
+Use multi-stage builds to optimize image size:
+```dockerfile
+# First stage
+FROM node:16 AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+RUN npm run build
+
+# Second stage
+FROM nginx:alpine
+COPY --from=builder /app/build /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
+```
+
+#### Docker Secrets
+Manage sensitive data securely:
+```bash
+# Create a secret
+printf "mysecretpassword" | docker secret create db_password -
+
+# Use in a service (Docker Swarm)
+docker service create --name mydb --secret db_password mysql:5.7
+```
+
+#### Debugging Containers
+- Attach to a container:
+  ```bash
+  docker attach <container-id>
+  ```
+- Debug using a different shell:
+  ```bash
+  docker exec -it <container-id> /bin/sh
+  ```
+- View resource usage:
+  ```bash
+  docker stats
+  ```
+
 ---
 
 ### Docker Lifecycle Chart 🔄
@@ -316,8 +369,13 @@ Volume & Network
   ```
 
 ---
- 
 
+### Workflow 🖋
+
+![Workflow](../images/docker.gif)
+
+
+---
 
 ### Workflow 📝
 
